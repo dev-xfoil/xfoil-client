@@ -1,0 +1,14 @@
+syntax = "proto3";
+package enums;
+
+option java_multiple_files = true;
+option java_package = "com.xfoil.dev.service.grpc";
+option java_outer_classname = "Enums";
+
+
+enum ResponseStatus {
+  ERROR = 0;
+  SUCCESS = 1;
+  TRANSIENT_ERROR = 2;
+  PERMANENT_ERROR = 3;
+}

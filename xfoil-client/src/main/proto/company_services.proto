@@ -1,0 +1,37 @@
+syntax = "proto3";
+package comapny_services;
+import "enums.proto";
+import "generic.proto";
+option java_multiple_files = true;
+option java_package = "com.xfoil.dev.service.grpc";
+option java_outer_classname = "CompanyServices";
+
+service CompanyProcessing{
+
+  rpc getRegions(RegionsRequest) returns (RegionResponse){}
+
+  rpc getDepartmentsCompany(RegionsRequest) returns (RegionResponse){}
+
+  rpc nestedLocations(NestedLocationsRequest) returns (NestedLocationsResponse){}
+
+}
+
+message RegionsRequest{
+  string jwt = 1;
+  generic.Meta meta = 2;
+}
+
+message RegionResponse{
+  repeated string regions_list = 1;
+  enums.ResponseStatus response_status = 2;
+}
+
+message NestedLocationsRequest{
+  string region = 1;
+  string jwt = 2;
+  generic.Meta meta = 3;
+}
+message NestedLocationsResponse{
+  repeated string locations = 1;
+  enums.ResponseStatus response_status = 2;
+}

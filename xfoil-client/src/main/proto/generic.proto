@@ -1,0 +1,63 @@
+syntax = "proto3";
+package generic;
+import "google/protobuf/timestamp.proto";
+option java_multiple_files = true;
+option java_package = "com.xfoil.dev.service.grpc";
+option java_outer_classname = "Generic";
+
+
+message Meta {
+  uint64 timestamp = 1;
+  string device_id = 2;
+  string ip_address = 3;
+  string action = 4;
+  string language = 5;
+  string app_version = 6;
+  string timezone = 7;
+  string api_key = 8;
+}
+
+message CashAcceptedStatus {
+  string currency = 1;
+
+  // Total number of banknotes temporarily stored (precise)
+  int64 in_escrow = 2;
+  // Total number of rejected banknotes (may be inaccurate)
+  int64 in_reject_bin = 3;
+  // denom and number (?)
+  int64 denom_number = 4;
+  bool is_transaction_successful = 5;
+
+  message BillInfo {
+    int64 iPaperid = 1;
+    string acSn =2 ;
+    int64 iPaperCode =3 ;
+    int64 denomination =4 ;
+    int32 cCashSide =5 ;
+    int32 cCashDir = 6;
+    int32 cSortResult =7 ;
+    int32 cCashExit =8;
+    int32 cRejectCode =9;
+    bytes acSNoImg  =10;
+
+    int64 cBnSoilLevel = 11;
+    int64 cBnQualityResult = 12;
+    int64 iImageRejectCode = 13;
+    int64 iSortRejectCode = 14;
+    google.protobuf.Timestamp transaction_date = 15;
+  }
+}
+
+enum CashDepositStatus{
+  CASH_STARTED = 0;
+  CASH_COUNTED = 1;
+  CASH_STORED = 2;
+  CASH_CANCELLED = 3;
+  CASH_IN_ERROR = 4;
+  CASH_MANUAL = 5;
+  CASH_IN_CLAIM = 6;
+  CASH_PICKUP = 7;
+  CASH_CONFIRMED = 8;
+  CASH_DROPPED = 9;
+  CASH_IN_RETRY = 10;
+}

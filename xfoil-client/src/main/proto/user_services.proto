@@ -1,0 +1,190 @@
+syntax = "proto3";
+package user_services;
+import "enums.proto";
+import "generic.proto";
+option java_multiple_files = true;
+import "google/protobuf/timestamp.proto";
+option java_package = "com.xfoil.dev.service.grpc";
+option java_outer_classname = "UserServices";
+
+service UserProcessing{
+
+  rpc LoopChecking(LoopCheckingRequest) returns (LoopCheckingResponse){}
+
+  rpc CreateRider(UserRequest) returns (VerifiedUserResponse){}
+
+  rpc VerifyUser(UserRequest) returns (VerifiedUserResponse){}
+
+  rpc UpdateUser(UserRequest) returns (VerifiedUserResponse){}
+
+  rpc SetRiderActiveInactive(ActiveInactiveRequest) returns (ActiveInactiveResponse){}
+
+  rpc GetQrCodeData(UserRequest) returns (QRResponse){};
+
+  rpc createUserPortal(UserPortalRequest) returns (UserPortalResponse){} //Used for UserPortal
+
+  rpc updateUserPortal(UserPortalRequest) returns (UserPortalResponse){}
+
+  rpc updateRiderFcm(UpdateFcmRequest) returns (UpdateFcmResponse){}
+
+  rpc GetQrCodeOTP(OTPQrRequest) returns (OTPQrResponse){}
+
+  rpc VerifyBA(BARequest) returns (VerifiedUserResponse){}
+
+  rpc CheckInBA(BACheckInCheckoutRequest) returns (BACheckInCheckoutResponse){}
+
+  rpc CheckOutBA(BACheckInCheckoutRequest) returns (BACheckInCheckoutResponse){}
+
+  rpc GetBAActiveSessions(BACheckInCheckoutRequest) returns (BASessionsResponse){}
+
+}
+
+message ActiveInactiveResponse{
+  enums.ResponseStatus response_status = 1;
+}
+
+message ActiveInactiveRequest{
+  int64 rider_id = 1;
+  bool is_rider_profile_active = 2;
+}
+
+message UserRequest{
+  string firstName = 1;
+  string lastName = 2;
+  string cnic_number = 3;
+  string phone_number = 4;
+  string delivery_agent_id = 6;
+  string company_code = 7;
+  bool is_closed_loop = 8;
+  string office_location = 9;
+  string office_reigon = 10;
+  string office_department = 11;
+  bool is_rider_profile_active = 12;
+  generic.Meta meta = 13;
+  int64 rider_id = 14;
+}
+
+message LoopCheckingRequest{
+  generic.Meta meta = 1;
+}
+
+message LoopCheckingResponse{
+  repeated CompanyResponse companiesList = 1;
+  bool is_closed_loop = 2;
+  enums.ResponseStatus response_status = 3;
+  string machine_name = 4;
+}
+
+message RiderResponse{
+  int64 rider_id = 1;
+  string delivery_agent_id = 2;
+  bool is_rider_profile_active = 3;
+  string cnic = 4;
+  string firstName = 5;
+  string lastName = 6;
+  string phoneNumber = 7;
+  string office_location = 8;
+  string office_reigon = 9;
+  string office_department = 10;
+  CompanyResponse company = 11;
+  enums.ResponseStatus response_status = 12;
+  string office_location_id = 13;
+}
+
+message CompanyResponse{
+  string company_code = 1;
+  string company_name = 2;
+  string company_logo_url = 3;
+  string machineName = 4;
+}
+
+message VerifiedUserResponse{
+  RiderResponse riders = 1;
+  enums.ResponseStatus response_status = 2;
+}
+
+message QRResponse{
+  string qr_string = 1;
+  enums.ResponseStatus response_status = 2;
+}
+
+message UserPortalRequest{
+  string email = 1;
+  string first_name = 2;
+  bool is_password_change_required = 3;
+  string last_name = 4;
+  string password = 5;
+  string phone_number = 6;
+  string company_id = 7;
+  bool is_locked = 8;
+  string last_login = 9;
+  string parent_role = 10;
+  string office_location = 11;
+  string office_region = 12;
+  generic.Meta meta = 13;
+}
+
+message UserPortalResponse{
+  enums.ResponseStatus response_status = 1;
+}
+
+message UpdateFcmRequest{
+  int64 rider_id = 1;
+  string fcm_token = 2;
+}
+
+message UpdateFcmResponse{
+  enums.ResponseStatus response_status = 1;
+}
+
+message OTPQrRequest{
+  generic.Meta meta = 1;
+  string agent_id_name = 2;
+}
+
+message OTPQrResponse{
+  string qr_string = 1;
+  enums.ResponseStatus response_status = 2;
+}
+
+message BARequest{
+  string emailId = 1;
+  string password = 2;
+  generic.Meta meta = 3;
+}
+
+message BACheckInCheckoutRequest{
+    string encryptedText = 1;
+    string username = 2;
+    string check_in_time = 3;
+    string checkout_time = 4;
+    string session_created_time = 5;
+    generic.Meta meta = 6;
+    string user_role = 7;
+    string meta_data = 8;
+}
+
+message BACheckInCheckoutResponse{
+  enums.ResponseStatus response_status = 1;
+
+}
+
+message BASessionsResponse{
+  enums.ResponseStatus response_status = 1;
+  repeated CheckInCheckout checkInCheckout = 2;
+}
+
+message CheckInCheckout{
+  string user_role = 1;
+  string machine_id = 2;
+  string check_in_time = 3;
+}
+
+
+
+
+
+
+
+
+

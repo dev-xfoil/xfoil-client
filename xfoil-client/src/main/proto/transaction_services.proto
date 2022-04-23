@@ -1,0 +1,96 @@
+syntax = "proto3";
+package transaction_services;
+import "enums.proto";
+import "generic.proto";
+import "google/protobuf/timestamp.proto";
+option java_multiple_files = true;
+option java_package = "com.xfoil.dev.service.grpc";
+option java_outer_classname = "TransactionsBalanceServices";
+
+service TransactionBalanceProcessing{
+
+  rpc GetCompanyBalanceForDateRange(BalanceRequest) returns(VerifiedBalanceResponse){}
+
+  rpc GetRiderBalanceForSingleDate(BalanceRequest) returns(VerifiedBalanceResponse){}
+
+  rpc GetCompanyBalanceForSingleDate(BalanceRequest) returns(VerifiedBalanceResponse){}
+
+  rpc GetRiderTransactionsForSingleDate(BalanceRequest) returns(VerifiedTransactionResponse){}
+
+  rpc GetCompanyTransactionsForSingleDate(BalanceRequest) returns(VerifiedTransactionResponse){}
+
+  rpc GetCompanyTransactionsForDateRange(BalanceRequest) returns(VerifiedTransactionResponse){}
+
+  rpc SetRiderDueBalance(BalanceDueRequest) returns(VerifiedBalanceResponse){}
+
+  rpc GetRiderDueBalance(BalanceDueRequest) returns(VerifiedBalanceResponse){}
+
+  rpc DepositToAccount (DepositToAccountRequest) returns (DepositToAccountResponse) {}
+
+  rpc TransactionReplayToSQS (TransactionReplayRequest) returns (TransactionReplayResponse) {}
+
+}
+
+
+message BalanceDueRequest{
+  int64 rider_id = 1;
+  string company_code = 2;
+  string amount_received = 3;
+  string amount_return = 4;
+  google.protobuf.Timestamp transaction_date = 5;
+  generic.Meta meta = 6;
+}
+
+message BalanceRequest{
+  string transaction_date_start = 1;
+  string transaction_date_end = 2;
+  int64 rider_id = 3;
+  string company_code = 4;
+  generic.Meta meta = 5;
+}
+
+message VerifiedBalanceResponse{
+  double balance = 1;
+  enums.ResponseStatus response_status = 2;
+}
+
+message TransactionObject{
+  string transaction_id = 1;
+  bool is_transaction_successful = 2;
+  string transaction_amount = 3;
+  string transaction_date = 4;
+  string transaction_type = 5;
+  string machine_id = 6;
+  int64 rider_id = 7;
+  string cash_deposit_status = 8;
+}
+
+message VerifiedTransactionResponse{
+  repeated TransactionObject transaction_object_list = 1;
+  enums.ResponseStatus response_status = 2;
+}
+
+message DepositToAccountRequest {
+  string transaction_String = 1;
+  generic.Meta meta = 2;
+}
+
+message DepositToAccountResponse {
+  enums.ResponseStatus status = 6;
+  generic.CashDepositStatus cash_deposit_status = 8;
+}
+
+message TransactionSummary{
+  string denomination =1;
+  int64 count = 2;
+}
+
+message TransactionReplayRequest{
+  string transaction_Id = 1;
+  generic.Meta meta = 2;
+}
+
+message TransactionReplayResponse{
+  enums.ResponseStatus status = 1;
+}
+
