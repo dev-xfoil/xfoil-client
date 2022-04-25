@@ -37,6 +37,8 @@ service UserProcessing{
 
   rpc GetBAActiveSessions(BACheckInCheckoutRequest) returns (BASessionsResponse){}
 
+  rpc AllCheckOutBA(AllCheckInCheckoutRequest) returns (BACheckInCheckoutResponse){}
+
 }
 
 message ActiveInactiveResponse{
@@ -178,6 +180,17 @@ message CheckInCheckout{
   string user_role = 1;
   string machine_id = 2;
   string check_in_time = 3;
+}
+
+message AllCheckInCheckoutRequest{
+  generic.Meta meta = 1;
+  string checkout_time = 2;
+  string username = 3;
+  repeated ListOfMachineIds all_machine_ids = 4;
+}
+
+message ListOfMachineIds {
+  string machineId=1;
 }
 
 

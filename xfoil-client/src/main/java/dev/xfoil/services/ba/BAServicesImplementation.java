@@ -101,6 +101,48 @@ public class BAServicesImplementation implements BAServices {
         return activeSessionResponse;
     }
 
+    @Override
+    public dev.xfoil.models.ResponseStatus BACheckoutAllSessions(String username, String checkoutTime, List<String> machineIds) {
+        dev.xfoil.models.ResponseStatus checkOutResponse = null;
+        try {
+            checkOutResponse = BAAllCheckOutRequest(username, checkoutTime, machineIds);
+            logger.info("qq BaActiveSessionResponse: " + checkOutResponse);
+        } catch (Exception e) {
+            logger.info("BaActiveSessionResponse-ex: " + e.getLocalizedMessage());
+        }
+        return checkOutResponse;
+    }
+
+    private dev.xfoil.models.ResponseStatus BAAllCheckOutRequest(String username, String checkoutTime, List<String> machineIds) {
+        dev.xfoil.models.ResponseStatus responseStatus = null;
+        try {
+            BACheckInCheckoutResponse checkInResponse = serverConfig.getUserProcessingFutureStub()
+                    .withDeadlineAfter(requestDuration, TimeUnit.SECONDS)
+                    .allCheckOutBA(AllCheckInCheckoutRequest.newBuilder()
+                            .setMeta(XfoilClient.getMeta())
+                            .setUsername(username)
+                            .setCheckoutTime(checkoutTime)
+                            .addAllAllMachineIds(getListOfMachineId(machineIds))
+                            .build()).get();
+
+            responseStatus = convertStatus(checkInResponse.getResponseStatus());
+        }catch (Exception e){
+            logger.info("BACheckInRequest-ex: " + e.getLocalizedMessage());
+            responseStatus = convertToResponseStatus(e.getLocalizedMessage());
+        }
+        return responseStatus;
+    }
+
+    private Iterable<? extends ListOfMachineIds> getListOfMachineId(List<String> machineIds) {
+        List<ListOfMachineIds> listOfMachineId = new ArrayList<>();
+        if(machineIds != null && machineIds.size() > 0){
+            for(String machineId: machineIds){
+                listOfMachineId.add(ListOfMachineIds.newBuilder().setMachineId(machineId).build());
+            }
+        }
+        return listOfMachineId;
+    }
+
     private BaActiveSessionResponse BAActiveSessionRequest(String username) {
         BaActiveSessionResponse activeSessionResponse = null;
         try {
