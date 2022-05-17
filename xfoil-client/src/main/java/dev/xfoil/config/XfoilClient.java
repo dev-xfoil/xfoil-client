@@ -52,7 +52,7 @@ public class XfoilClient {
     private XfoilClient() {
         executorService = Executors.newCachedThreadPool();
         configs = getProperties("config.properties",1);
-        channel = AndroidChannelBuilder.forAddress(SERVER_URL,5000)
+        channel = AndroidChannelBuilder.forAddress(SERVER_URL,5002)
                 .intercept(new InterceptorHandler()).enableRetry().maxRetryAttempts(10).keepAliveWithoutCalls(true)
                 .keepAliveTime(60, TimeUnit.SECONDS)//.usePlaintext() // remove this plaintext after testing from local
                 .build();
