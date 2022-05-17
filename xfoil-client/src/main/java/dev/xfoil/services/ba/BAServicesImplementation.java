@@ -113,6 +113,18 @@ public class BAServicesImplementation implements BAServices {
         return checkOutResponse;
     }
 
+    @Override
+    public dev.xfoil.models.ResponseStatus ScanOTPQrCodes(String encryptedText, String username, String checkInTime, String role) {
+        dev.xfoil.models.ResponseStatus scanQrcodeResponse = null;
+        try {
+            scanQrcodeResponse = ScanQrCodesRequest(encryptedText, username, checkInTime, role);
+            logger.info("qq ScanOTPQrCodes: " + scanQrcodeResponse);
+        } catch (Exception e) {
+            logger.info("ScanOTPQrCodes-ex: " + e.getLocalizedMessage());
+        }
+        return scanQrcodeResponse;
+    }
+
     private dev.xfoil.models.ResponseStatus BAAllCheckOutRequest(String username, String checkoutTime, List<String> machineIds) {
         dev.xfoil.models.ResponseStatus responseStatus = null;
         try {
@@ -215,6 +227,27 @@ public class BAServicesImplementation implements BAServices {
             responseStatus = convertStatus(checkInResponse.getResponseStatus());
         }catch (Exception e){
             logger.info("BACheckInRequest-ex: " + e.getLocalizedMessage());
+            responseStatus = convertToResponseStatus(e.getLocalizedMessage());
+        }
+        return responseStatus;
+    }
+
+    private dev.xfoil.models.ResponseStatus ScanQrCodesRequest(String encryptedText, String username, String checkInTime, String role) {
+        dev.xfoil.models.ResponseStatus responseStatus = null;
+        try {
+            ScanQrCodesResponse checkInResponse = serverConfig.getBAProcessingFutureStub()
+                    .withDeadlineAfter(requestDuration, TimeUnit.SECONDS)
+                    .scanQrCodes(ScanQrCodesRequest.newBuilder()
+                            .setMeta(XfoilClient.getMeta())
+                            .setEncryptedText(encryptedText)
+                            .setEmailId(username)
+                            .setRole(role)
+                            .setDateTime(checkInTime)
+                            .build()).get();
+
+            responseStatus = convertStatus(checkInResponse.getResponseStatus());
+        }catch (Exception e){
+            logger.info("ScanQrCodesRequest-ex: " + e.getLocalizedMessage());
             responseStatus = convertToResponseStatus(e.getLocalizedMessage());
         }
         return responseStatus;

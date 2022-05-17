@@ -1,6 +1,7 @@
 package dev.xfoil.config;
 
 
+import com.xfoil.dev.service.grpc.BAServiceProcessingGrpc;
 import com.xfoil.dev.service.grpc.CompanyProcessingGrpc;
 import com.xfoil.dev.service.grpc.Meta;
 import com.xfoil.dev.service.grpc.TransactionBalanceProcessingGrpc;
@@ -32,6 +33,7 @@ public class XfoilClient {
             transactionBalanceProcessingFutureStub;
     private final CompanyProcessingGrpc.CompanyProcessingFutureStub
             companyProcessingFutureStub;
+    private final BAServiceProcessingGrpc.BAServiceProcessingFutureStub baProcessingFutureStub;
     private final Logger logger = Logger.getLogger("InfoLogging");
     private static String SERVER_URL = "";
     private static String apiKey = null;
@@ -57,13 +59,6 @@ public class XfoilClient {
                 .keepAliveTime(60, TimeUnit.SECONDS)//.usePlaintext() // remove this plaintext after testing from local
                 .build();
 
-//                ManagedChannelBuilder.forAddress(SERVER_URL,5000) //configs.getProperty(Constants.SERVER_PORT) == null ? 0 : Integer.valueOf(configs.getProperty(Constants.SERVER_PORT))
-//                .intercept(new InterceptorHandler()).enableRetry().maxRetryAttempts(10).keepAliveWithoutCalls(true)
-//                .keepAliveTime(60, TimeUnit.SECONDS)//.usePlaintext()
-//                .build();
-
-        //Long.valueOf(configs.getProperty(Constants.KEEP_ALIVE_TIME))
-
         userProcessingFutureStub =
                 UserProcessingGrpc.newFutureStub(channel)
                         .withExecutor(executorService);
@@ -75,6 +70,9 @@ public class XfoilClient {
         companyProcessingFutureStub =
                 CompanyProcessingGrpc.newFutureStub(channel)
                         .withExecutor(executorService);
+
+        baProcessingFutureStub = BAServiceProcessingGrpc.newFutureStub(channel)
+                .withExecutor(executorService);
 
     }
 
@@ -111,6 +109,11 @@ public class XfoilClient {
 
     public CompanyProcessingGrpc.CompanyProcessingFutureStub getCompanyProcessingFutureStub() {
         return companyProcessingFutureStub;
+    }
+
+    public BAServiceProcessingGrpc.BAServiceProcessingFutureStub getBAProcessingFutureStub() {
+        channel.resetConnectBackoff();
+        return baProcessingFutureStub;
     }
 
     public static Meta getMeta() {

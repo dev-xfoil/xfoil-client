@@ -21,4 +21,6 @@ public interface BAServices {
 
     ResponseStatus BACheckoutAllSessions(String username, String checkoutTime, List<String> machineIds);
 
+    ResponseStatus ScanOTPQrCodes(String encryptedText, String username, String checkInTime, String role);
+
 }

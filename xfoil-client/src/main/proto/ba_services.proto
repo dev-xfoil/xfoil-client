@@ -1,0 +1,29 @@
+syntax = "proto3";
+package user_services;
+import "enums.proto";
+import "generic.proto";
+option java_multiple_files = true;
+option java_package = "com.xfoil.dev.service.grpc";
+option java_outer_classname = "BAAppServices";
+
+service BAServiceProcessing{
+
+  rpc ScanQrCodes(ScanQrCodesRequest) returns (ScanQrCodesResponse){}
+
+}
+
+message ScanQrCodesRequest{
+  generic.Meta meta = 1;
+  string encrypted_text = 2;
+  string email_id = 3;
+  string role = 4;
+  string date_time = 5;
+}
+
+message ScanQrCodesResponse{
+  enums.ResponseStatus response_status = 1;
+  string qr_string = 2;
+  generic.CashDepositStatus cash_deposit_status = 3;
+}
+
+
