@@ -11,6 +11,7 @@ import dev.xfoil.config.XfoilClient;
 import dev.xfoil.models.BAResponse;
 import dev.xfoil.models.BaActiveSessionResponse;
 import dev.xfoil.models.CompanyResponse;
+import dev.xfoil.models.QRCodeResponse;
 
 import static dev.xfoil.utils.Util.convertStatus;
 import static dev.xfoil.utils.Util.convertToResponseStatus;
@@ -114,8 +115,8 @@ public class BAServicesImplementation implements BAServices {
     }
 
     @Override
-    public dev.xfoil.models.ResponseStatus ScanOTPQrCodes(String encryptedText, String username, String checkInTime, String role) {
-        dev.xfoil.models.ResponseStatus scanQrcodeResponse = null;
+    public QRCodeResponse ScanQrCodes(String encryptedText, String username, String checkInTime, String role) {
+        QRCodeResponse scanQrcodeResponse = null;
         try {
             scanQrcodeResponse = ScanQrCodesRequest(encryptedText, username, checkInTime, role);
             logger.info("qq ScanOTPQrCodes: " + scanQrcodeResponse);
@@ -232,8 +233,8 @@ public class BAServicesImplementation implements BAServices {
         return responseStatus;
     }
 
-    private dev.xfoil.models.ResponseStatus ScanQrCodesRequest(String encryptedText, String username, String checkInTime, String role) {
-        dev.xfoil.models.ResponseStatus responseStatus = null;
+    private QRCodeResponse ScanQrCodesRequest(String encryptedText, String username, String checkInTime, String role) {
+        QRCodeResponse responseStatus = null;
         try {
             ScanQrCodesResponse checkInResponse = serverConfig.getBAProcessingFutureStub()
                     .withDeadlineAfter(requestDuration, TimeUnit.SECONDS)
@@ -245,10 +246,10 @@ public class BAServicesImplementation implements BAServices {
                             .setDateTime(checkInTime)
                             .build()).get();
 
-            responseStatus = convertStatus(checkInResponse.getResponseStatus());
+            responseStatus = new QRCodeResponse(""+checkInResponse.getQrString(),convertStatus(checkInResponse.getResponseStatus()));
         }catch (Exception e){
             logger.info("ScanQrCodesRequest-ex: " + e.getLocalizedMessage());
-            responseStatus = convertToResponseStatus(e.getLocalizedMessage());
+            responseStatus = new QRCodeResponse(e.getLocalizedMessage(),convertToResponseStatus(e.getLocalizedMessage()));
         }
         return responseStatus;
     }

@@ -33,7 +33,8 @@ public class XfoilClient {
             transactionBalanceProcessingFutureStub;
     private final CompanyProcessingGrpc.CompanyProcessingFutureStub
             companyProcessingFutureStub;
-    private final BAServiceProcessingGrpc.BAServiceProcessingFutureStub baProcessingFutureStub;
+    private final BAServiceProcessingGrpc.BAServiceProcessingFutureStub
+            baProcessingFutureStub;
     private final Logger logger = Logger.getLogger("InfoLogging");
     private static String SERVER_URL = "";
     private static String apiKey = null;
