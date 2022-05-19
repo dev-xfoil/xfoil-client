@@ -110,7 +110,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'dev.xfoil'
                 artifactId = 'xfoil-client'
-                version = 'd-1.0.17'
+                version = 'd-1.0.18'
             }
         }
     }
