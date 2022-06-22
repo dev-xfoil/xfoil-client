@@ -6,7 +6,7 @@ This SDK will enable the client to call Xfoil’s Services(APIs) and do the foll
 
 ```bash
 
-version = 1.0.15
+version = 1.0.16
 
 ```
 
