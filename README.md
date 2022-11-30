@@ -128,6 +128,14 @@ TransactionBalanceService transactionBalanceService = TransactionBalanceServiceI
 response = transactionBalanceService.depositCash(String scannedQrcodeString);
 
 ```
+### SetRiderDueBalance
+This method is used to set due amount for a rider 
+
+```java
+
+BalanceResponse setRiderDueBalance(Long riderId, String companyCode, String amountReceived, String amountReturn);
+
+```
 
 ## Server response
 
